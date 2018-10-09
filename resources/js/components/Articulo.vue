@@ -1,90 +1,98 @@
 <template>
      
 <main class="main">
-            <!-- Breadcrumb -->
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/">Escritorio</a></li> 
-            </ol>
-            <div class="container-fluid">
-                <!-- Ejemplo de tabla Listado -->
-                <div class="card">
-                    <div class="card-header">
-                        <i class="fa fa-align-justify"></i> Categorías
-                        <button type="button" @click="abrirModal('categoria','registrar')" class="btn btn-secondary" >
-                            <i class="icon-plus"></i>&nbsp;Nuevo
-                        </button>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group row">
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <select class="form-control col-md-3" v-model="criterio">
-                                      <option value="nombre">Nombre</option>
-                                      <option value="descripcion">Descripción</option>
-                                    </select>
-                                    <input type="text" v-model="buscar" @keyup.enter="listarCategoria(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
-                                    <button type="submit" @click="listarCategoria(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
-                                </div>
-                            </div>
+    <!-- Breadcrumb -->
+    <ol class="breadcrumb"> 
+        <li class="breadcrumb-item"><a href="/">Escritorio</a></li> 
+    </ol>
+    <div class="container-fluid">
+        <!-- Ejemplo de tabla Listado -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fa fa-align-justify"></i> Articulos
+                  <button type="button" @click="abrirModal('articulo','registrar')" class="btn btn-secondary" >
+                  <i class="icon-plus"></i>&nbsp;Nuevo
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                        <select class="form-control col-md-3" v-model="criterio">
+                            <option value="nombre">Nombre</option>
+                            <option value="descripcion">Descripción</option>
+                        </select>
+                        <input type="text" v-model="buscar" @keyup.enter="listarArticulo(1,buscar,criterio)" class="form-control" placeholder="Texto a buscar">
+                        <button type="submit" @click="listarArticulo(1,buscar,criterio)" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                         </div>
-                        <table class="table table-bordered table-striped table-sm">
-                            <thead>
-                                <tr>
-                                    <th>Opciones</th>
-                                    <th>Nombre</th>
-                                    <th>Descripción</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="categoria in arrayCategoria" :key="categoria.id">
-                                    <td>
-                                        <button type="button" @click="abrirModal('categoria','actualizar',categoria)" class="btn btn-warning btn-sm" >
-                                          <i class="icon-pencil"></i>
-                                        </button> &nbsp;
-                                        <template v-if="categoria.condicion">
-                                            <button type="button" class="btn btn-danger btn-sm" @click="desactivarCategoria(categoria.id)" >
-                                              <i class="icon-trash"></i>
-                                            </button>
-                                        </template>
-                                        <template v-else>
-                                            <button type="button" class="btn btn-info btn-sm" @click="activarCategoria(categoria.id)" >
-                                              <i class="icon-check"></i>
-                                            </button>
-                                        </template>
-                                    </td>
-                                    <td v-text="categoria.nombre"></td>
-                                    <td v-text="categoria.descripcion"></td>
-                                    <td>
-                                        <div v-if="categoria.condicion">
-                                            <span class="badge badge-success">Activo</span>    
-                                        </div>
-                                        <div v-else>
-                                            <span class="badge badge-danger">Desactivo</span>    
-                                        </div>
-                                    </td>
-                                </tr> 
-                            </tbody>
-                        </table>
-                        <nav>
-                            <ul class="pagination">
-                                <li class="page-item" v-if="pagination.current_page > 1">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1,buscar,criterio)">
-                                        Ant
-                                    </a>
-                                </li>
-                                <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(page,buscar,criterio)" v-text="page"></a>
-                                </li>
-                                 <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1,buscar,criterio)">Sig</a>
-                                </li>
-                            </ul>
-                        </nav>
                     </div>
                 </div>
-                <!-- Fin ejemplo de tabla Listado -->
+                <table class="table table-bordered table-striped table-sm">
+                    <thead>
+                        <tr>
+                            <th>Opciones</th>
+                            <th>Código</th>
+                            <th>Nombre</th>
+                            <th>Categoría</th>
+                            <th>Precio Venta</th>
+                            <th>Stock</th>
+                            <th>Descripción</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="articulo in arrayArticulo" :key="articulo.id">
+                            <td>
+                                <button type="button" @click="abrirModal('articulo','actualizar',articulo)" class="btn btn-warning btn-sm" >
+                                  <i class="icon-pencil"></i>
+                                </button> &nbsp;
+                                <template v-if="articulo.condicion">
+                                    <button type="button" class="btn btn-danger btn-sm" @click="desactivarCategoria(articulo.id)" >
+                                      <i class="icon-trash"></i>
+                                    </button>
+                                </template>
+                                <template v-else>
+                                    <button type="button" class="btn btn-info btn-sm" @click="activarCategoria(articulo.id)" >
+                                      <i class="icon-check"></i>
+                                    </button>
+                                </template>
+                            </td>
+                            <td v-text="articulo.codigo"></td>
+                            <td v-text="articulo.nombre"></td>
+                            <td v-text="articulo.nombre_categoria"></td>
+                            <td v-text="articulo.precio_venta"></td>
+                            <td v-text="articulo.stock"></td>
+                            <td v-text="articulo.descripcion"></td>
+                            <td>
+                                <div v-if="articulo.condicion">
+                                    <span class="badge badge-success">Activo</span>    
+                                </div>
+                                <div v-else>
+                                    <span class="badge badge-danger">Desactivo</span>    
+                                </div>
+                            </td>
+                        </tr> 
+                    </tbody>
+                </table>
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item" v-if="pagination.current_page > 1">
+                            <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page - 1,buscar,criterio)">
+                                Ant
+                            </a>
+                        </li>
+                        <li class="page-item" v-for="page in pagesNumber" :key="page" :class="[page == isActived ? 'active' : '']">
+                            <a class="page-link" href="#" @click.prevent="cambiarPagina(page,buscar,criterio)" v-text="page"></a>
+                        </li>
+                         <li class="page-item" v-if="pagination.current_page < pagination.last_page">
+                            <a class="page-link" href="#" @click.prevent="cambiarPagina(pagination.current_page + 1,buscar,criterio)">Sig</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
+        </div>
+        <!-- Fin ejemplo de tabla Listado -->
+    </div>
             <!--Inicio del modal agregar/actualizar-->
             <div class="modal fade" tabindex="-1" :class="{'mostrar' : modal}" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog modal-primary modal-lg" role="document">
@@ -141,15 +149,20 @@
     export default {
         data (){
             return {
-                categoria_id : 0,
-                nombre : '',
+                articulo_id : 0,
+                idcategoria : 0,
+                nombre_categoria : '',
+                codigo : 0,
+                nombre : 0,
+                precio_venta : 0,
+                stock : '',
                 descripcion : '',
-                arrayCategoria : [],
+                arrayArticulo : [],
                 modal : 0,
                 tituloModal : '',
                 tipoAccion : 0,
-                errorCategoria : 0,
-                errorMostrarMsjCategoria : [],
+                errorArticulo : 0,
+                errorMostrarMsjArticulo : [],
                 pagination : {
                     'total'       : 0,
                     'current_page': 0,
@@ -189,12 +202,12 @@
             }
         },
         methods : {
-            listarCategoria (page,buscar,criterio){
+            listarArticulo (page,buscar,criterio){
                 let me=this;
-                var url = '/categoria?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
+                var url = '/articulo?page=' + page + '&buscar='+ buscar + '&criterio='+ criterio;
                 axios.get(url).then(function (response){
                     var respuesta = response.data;
-                    me.arrayCategoria = respuesta.categorias.data;
+                    me.arrayArticulo = respuesta.articulos.data;
                     me.pagination = respuesta.pagination;
                 })
                 .catch(function (error){
@@ -205,11 +218,11 @@
                 let me = this;
                 me.pagination.current_page = page;
 
-                me.listarCategoria(page,buscar,criterio);
+                me.listarArticulo(page,buscar,criterio);
             },
-            registrarCategoria(){
+            registrarArticulo(){
 
-                if(this.validarCategoria()){
+                if(this.validarArticulo()){
                     return;
                 }
 
@@ -360,7 +373,7 @@
             }
         },
         mounted() {
-            this.listarCategoria(1,this.buscar,this.criterio);
+            this.listarArticulo(1,this.buscar,this.criterio);
         }
     }
 </script>
