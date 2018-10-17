@@ -15,11 +15,11 @@ class ArticuloController extends Controller
 
            if($buscar==''){
             $articulos = Articulo::join('categorias','articulos.idcategoria','=','categorias.id')
-                ->select('articulos.id','articulos.idcategoria','articulos.codigo','articulos.nombre','categorias.nombre as nombre_categoria','articulos.precio_venta','articulos.descripcion')->orderBy('articulos.id','desc')->paginate(3);
+                ->select('articulos.id','articulos.idcategoria','articulos.codigo','articulos.nombre','categorias.nombre as nombre_categoria','articulos.precio_venta','articulos.stock','articulos.condicion','articulos.descripcion')->orderBy('articulos.id','desc')->paginate(3);
            }else{
 
                 $articulos = Articulo::join('categorias','articulos.idcategoria','=','categorias.id')
-                ->select('articulos.id','articulos.idcategoria','articulos.codigo','articulos.nombre','categorias.nombre as nombre_categoria','articulos.precio_venta','articulos.descripcion')->
+                ->select('articulos.id','articulos.idcategoria','articulos.codigo','articulos.nombre','categorias.nombre as nombre_categoria','articulos.precio_venta','articulos.stock','articulos.condicion','articulos.descripcion')->
                 where('articulos.'.$criterio, 'like', '%'.$buscar.'%')->orderBy('articulos.id','desc')->paginate(3);
            }
 
@@ -34,6 +34,14 @@ class ArticuloController extends Controller
                 ],
             'articulos' => $articulos
             ];
+        }
+        public function selectArticulo(Request $request){
+            if(!$request->ajax()) return redirect('/');
+
+            $articulos = Articulo::where('condicion','=','1')
+            ->select('id','nombre')->orderBy('nombre','asc')->get();
+
+            return ['articulos' => $articulos]; 
         }
         public function store(Request $request)
         {
@@ -63,21 +71,21 @@ class ArticuloController extends Controller
             $articulo->condicion = '1';
             $articulo->save(); 
         }
-     public function desactivar(Request $request)
-        {
-            if(!$request->ajax()) return redirect('/');
+    public function desactivar(Request $request)
+    {
+        if(!$request->ajax()) return redirect('/');
 
-            $articulo = Articulo::findOrFail($request->id);
-            $articulo->condicion = '0';
-            $articulo->save();
-        }
+        $articulo = Articulo::findOrFail($request->id);
+        $articulo->condicion = '0';
+        $articulo->save();
+    }
         
-        public function activar(Request $request)
-        {
-            if(!$request->ajax()) return redirect('/');
+    public function activar(Request $request)
+    {
+        if(!$request->ajax()) return redirect('/');
 
-            $articulo = Articulo::findOrFail($request->id);
-            $articulo->condicion = '1';
-            $articulo->save();
-        }
+        $articulo = Articulo::findOrFail($request->id);
+        $articulo->condicion = '1';
+        $articulo->save();
+    }
 }
